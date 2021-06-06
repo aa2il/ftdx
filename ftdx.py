@@ -33,6 +33,7 @@ import rig_io.socket_io as socket_io
 
 import pyaudio
 import wave
+from settings import *
 
 ################################################################################
 
@@ -100,6 +101,27 @@ class PARAMS:
         self.baud          = 0
         self.Done          = False
 
+        # Read config file
+        self.RCFILE=os.path.expanduser("~/.ftdxrc")
+        self.SETTINGS=None
+        try:
+            with open(self.RCFILE) as json_data_file:
+                self.SETTINGS = json.load(json_data_file)
+        except:
+            print(self.RCFILE,' not found - need call!\n')
+            s=SETTINGS(None,self)
+            while not self.SETTINGS:
+                try:
+                    s.win.update()
+                except:
+                    pass
+                time.sleep(.01)
+            print('Settings:',self.SETTINGS)
+
+        self.MY_CALL      = self.SETTINGS['MY_CALL']
+        #self.LOG_NAME     = os.path.expanduser( args.log.replace('[MYCALL]',self.MY_CALL ) )
+        #sys,exit(0)
+        
         if True:
             print('args.rig=',args.rig)
             print('connection=',self.connection)

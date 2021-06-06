@@ -63,28 +63,34 @@ def GetKeyerMemory(self):
 def KeyerMemoryDefaults(self,arg):
     print("\Setting Keypad Defaults ",arg)
 
+    MY_CALL     = self.P.MY_CALL
+    MY_NAME     = self.P.MY_NAME
+    MY_STATE    = self.P.MY_STATE
+    MY_SEC      = self.P.MY_SEC
+    MY_CQ_ZONE  = self.P.MY_CQ_ZONE
+    MY_ITU_ZONE = self.P.MY_ITU_ZONE
+
     if arg==1:
         # ARRL Intl DX Contest & CQ 160
-        Keyer=['AA2IL','TU 5NN CA','CA CA','73','AGN?','0001']
+        Keyer=[MY_CALL,'TU 5NN '+MY_STATE,MY_STATE+MY_STATE,'73','AGN?','0001']
     elif arg==2:
         # NAQP
-        Keyer=['AA2IL','TU JOE CA','JOE JOE','CA CA','AGN?','0001']
+        Keyer=[MY_CALL,'TU 5NN '+MY_NAME,MY_NAME+MY_NAME,'73','AGN?','0001']
     elif arg==3:
         # IARU HF Champ
-        Keyer=['AA2IL','TU 5NN 6','T6 T6','73','AGN?','0001']
+        Keyer=[MY_CALL,'TU 5NN '+MY_ITU_ZONE,MY_ITU_ZONE+MY_ITU_ZONE,'73','AGN?','0001']
     elif arg==4:
         # CQ WW
-        Keyer=['AA2IL','TU 5NN 3','T3 T3','73','AGN?','GL']
+        Keyer=[MY_CALL,'TU 5NN '+MY_CQ_ZONE,MY_CQ_ZONE+MY_CQ_ZONE,'73','AGN?','0001']
     elif arg==5:
         # CQ WPX
-#        Keyer=['AA2IL','TU 5NN #','#','73','AGN','0001']
-        Keyer=['AA2IL','TU 5NN 1','001 001','73','AGN?','0001']
+        Keyer=[MY_CALL,'TU 5NN 1','001 001','73','AGN?','0001']
     elif arg==6:
         # ARRL 160
-        Keyer=['AA2IL','TU 5NN SDG','SDG SDG','73','AGN?','0001']
+        Keyer=[MY_CALL,'TU 5NN '+MY_SEC,MY_SEC+MY_SEC,'73','AGN?','0001']
     else:
         # Regular quick exchanges
-        Keyer=['AA2IL','RTU 5NN CA','OP JOE','73','BK','0001']
+        Keyer=[MY_CALL,'RTU 5NN '+MY_STATE,'OP '+MY_NAME,'73','BK','0001']
 
     for i in range(6):
         self.ekeyer[i].delete(0,END)

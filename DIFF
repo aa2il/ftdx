@@ -18,6 +18,9 @@ echo PTH=$PTH
 set old=${ROOT}${PTH}
 echo OLD=$old
 
+# Overide if necessary
+#set OLD="work2"
+
 rm -f DIFFS
 foreach i (*.py)
     echo $i
@@ -30,6 +33,7 @@ foreach i (*.py)
         echo " " >> DIFFS
         
         kompare $old/$i $i
+        #kompare $i $old/$i
     endif
 end
 

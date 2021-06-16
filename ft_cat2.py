@@ -324,64 +324,45 @@ class ft_cat2:
 
         # Read table of presets - same as for pySDR but we look at a few different fields
         print("\n==================================== Programming Presets ...")
-        if False:
-            # Old way
-            presets = read_presets(self.sock.rig_type2)
-            
-            for grp in list(presets.keys()):
-                print('Group:',grp)
-                #print presets[grp]
-
-                # Look at all the presets and program the ones that a mem channel number is given
-                for lab in list(presets[grp].keys()):
-                    x = presets[grp][lab]
-
-                    if x[6]>0 and x[6]!=99:
-                        if self.sock.rig_type=='Yaesu':
-                            write_mem_yaesu(self,grp,lab,x[6],x[2],x[1],x[7])
-                        elif self.sock.rig_type2=='IC9700':
-                            write_mem_icom(self,grp,lab,x[6],x[2],x[1],x[7],x[8])
-                            #self.Quit()
-                            #sys.exit(0)
-        else:
-            # New way
-            presets = read_presets2(self.sock.rig_type2,'Presets')
-            for line in presets:
-                #print line
-                ch = line[self.sock.rig_type2]
-                if len(ch)>0:
-                    if ch=='N/A':
-                        continue
+        presets = read_presets2(self.sock.rig_type2,'Presets')
+        for line in presets:
+            #print line
+            ch = line[self.sock.rig_type2]
+            if len(ch)>0:
+                if ch=='N/A':
+                    continue
                     
-                    ch=int(float(ch))
-                    grp=line['Group']
-                    lab=line['Tag']
-                    if grp!='Satellites':
-                        freq=line['Freq1 (KHz)']
-                    else:
-                        freq=line['Downlink']
-                    mode=line['Mode']
-                    pl=line['PL']
-                    chan = int( float(ch) )
-                    uplink=line['Uplink']
-                    inverting=line['Inverting']=='Yes'
+                ch=int(float(ch))
+                grp=line['Group']
+                lab=line['Tag']
+                if grp!='Satellites':
+                    freq=line['Freq1 (KHz)']
+                else:
+                    freq=line['Downlink']
+                mode=line['Mode']
+                pl=line['PL']
+                chan = int( float(ch) )
+                uplink=line['Uplink']
+                inverting=line['Inverting']=='Yes'
 
-                    #if grp!='Satellites' or ch!=80:
-                    if grp=='Satellites':
+                #if grp!='Satellites' or ch!=80:
+                if grp=='Satellites':
+                    continue
+                print( '\n############################################################################\nch=',ch)
+                if self.sock.rig_type=='Yaesu':
+                    #if ch<97 or ch>99:
+                    if ch!=84 and ch!=92 and ch!=93 and ch!=96:
+                    #if ch!=84:
                         continue
-                    print( '\n############################################################################\nch=',ch)
-                    if self.sock.rig_type=='Yaesu':
-                        if ch<75 or ch>79:
-                            continue
-                        write_mem_yaesu(self,grp,lab,chan,freq,mode,pl,uplink,inverting)
-                        time.sleep(0.1)
-                    elif self.sock.rig_type2=='IC9700':
-                        #if ch<20:
-                        if grp!='Sats' or ch>100:
-                            continue
-                        write_mem_icom(self,grp,lab,chan,freq,mode,pl,uplink,inverting)
-                    #self.Quit()
-                    #sys.exit(0)
+                    write_mem_yaesu(self,grp,lab,chan,freq,mode,pl,uplink,inverting)
+                    time.sleep(0.1)
+                elif self.sock.rig_type2=='IC9700':
+                    #if ch<20:
+                    if grp!='Sats' or ch>100:
+                        continue
+                    write_mem_icom(self,grp,lab,chan,freq,mode,pl,uplink,inverting)
+                #self.Quit()
+                #sys.exit(0)
 
         print('Done.')
         

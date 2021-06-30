@@ -272,6 +272,12 @@ class ft_cat2:
 
     def ProgramPresets(self):
 
+        # Set time & date
+        if False:
+            self.sock.set_date_time()
+            self.Quit()
+            sys.exit(0)
+
         if self.sock.rig_type=='Hamlib':
             print('*** ERROR *** Need to use DIRECT CONNECTION to rig to program presets ***')
             self.Quit()
@@ -316,12 +322,6 @@ class ft_cat2:
             self.Quit()
             sys.exit(0)
 
-        # Set time & date
-        if False:
-            self.sock.set_date_time()
-            #self.Quit()
-            #sys.exit(0)
-
         # Read table of presets - same as for pySDR but we look at a few different fields
         print("\n==================================== Programming Presets ...")
         presets = read_presets2(self.sock.rig_type2,'Presets')
@@ -351,8 +351,8 @@ class ft_cat2:
                 print( '\n############################################################################\nch=',ch)
                 if self.sock.rig_type=='Yaesu':
                     #if ch<97 or ch>99:
-                    if ch!=84 and ch!=92 and ch!=93 and ch!=96:
-                    #if ch!=84:
+                    #if ch!=84 and ch!=92 and ch!=93 and ch!=96:
+                    if ch<22 or ch>24:
                         continue
                     write_mem_yaesu(self,grp,lab,chan,freq,mode,pl,uplink,inverting)
                     time.sleep(0.1)

@@ -1,8 +1,23 @@
 ############################################################################################
-
-# ft_cat2.py - J.B.Attili - 2017
-
+#
+# ft_cat2.py - Rev 1.0
+# Copyright (C) 2021 by Joseph B. Attili, aa2il AT arrl DOT net
+#
 # This module contains everything related to the gui for ftdx.py
+#
+############################################################################################
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+############################################################################################
 
 import sys
 from rig_io.socket_io import *
@@ -46,8 +61,14 @@ class ft_cat2:
         self.sock = open_rig_connection(P.connection,P.host,P.PORT,P.baud,'FTDX: ',rig=P.rig)
         P.sock = self.sock
         if not self.sock.active:
+            print('\n*** FT_CAT2: Unable to open a connection to the rig - giving up!')
             sys.exit(0)
-        #sys.exit(0)
+        else:
+            print('\nFT_CAT2: YIPPE! Opened connection to rig via',
+                  P.sock.connection,P.sock.rig_type,P.sock.rig_type1,
+                  P.sock.rig_type2,'\n')
+            if P.sock.connection=='FLDIGI':
+                sys.exit(0)
 
         # Create the gui
         self.create_gui()
@@ -278,8 +299,9 @@ class ft_cat2:
             self.Quit()
             sys.exit(0)
 
-        if self.sock.rig_type=='Hamlib':
-            print('*** ERROR *** Need to use DIRECT CONNECTION to rig to program presets ***')
+        if self.sock.rig_type!='Direct':
+            print('*** ERROR *** Need to use DIRECT CONNECTION to rig to program presets ***', \
+                  self.sock.rig_type)
             self.Quit()
             sys.exit(0)
         

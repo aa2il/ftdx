@@ -25,6 +25,7 @@ from rig_io.ft_tables import *
 from ft_keypad import *
 from rig_io.presets import *
 from sound_replay import Mark,ReplayNormal,Slower
+from pprint import pprint
 
 if sys.version_info[0]==3:
     from tkinter import *
@@ -299,9 +300,9 @@ class ft_cat2:
             self.Quit()
             sys.exit(0)
 
-        if self.sock.rig_type!='Direct':
+        if self.sock.connection!='DIRECT':
             print('*** ERROR *** Need to use DIRECT CONNECTION to rig to program presets ***', \
-                  self.sock.rig_type)
+                  self.sock.connection)
             self.Quit()
             sys.exit(0)
         
@@ -318,14 +319,16 @@ class ft_cat2:
         
         if False:
             print('Hey!',self.sock.rig_type,self.sock.rig_type2)
-
             if self.sock.rig_type=='Yaesu':
-                read_mem_yaesu(self)
+                mem=read_mem_yaesu(self,0)
+                print('mem=',mem)
+                pprint(vars(mem))
             else:
                 read_mem_icom(self)
                 
-            self.Quit()
-            sys.exit(0)
+            #self.Quit()
+            #sys.exit(0)
+            return
 
         if False:
             P2 = int2bcd(1000*147130,5,1)
@@ -347,6 +350,8 @@ class ft_cat2:
         # Read table of presets - same as for pySDR but we look at a few different fields
         print("\n==================================== Programming Presets ...")
         presets = read_presets2(self.sock.rig_type2,'Presets')
+
+        channels=[]
         for line in presets:
             #print line
             ch = line[self.sock.rig_type2]
@@ -355,6 +360,7 @@ class ft_cat2:
                     continue
                     
                 ch=int(float(ch))
+                channels.append(ch)
                 grp=line['Group']
                 lab=line['Tag']
                 if grp!='Satellites':
@@ -374,10 +380,16 @@ class ft_cat2:
                 if self.sock.rig_type=='Yaesu':
                     #if ch<97 or ch>99:
                     #if ch!=84 and ch!=92 and ch!=93 and ch!=96:
-                    if ch<22 or ch>24:
+                    if ch>0:
+                        #return
                         continue
-                    write_mem_yaesu(self,grp,lab,chan,freq,mode,pl,uplink,inverting)
+                    same=write_mem_yaesu(self,grp,lab,chan,freq,mode,pl,uplink,inverting)
                     time.sleep(0.1)
+                    if not same:
+                        print('\n!@#$%^&*())(*&^%$#@@#$%^&*((*&^%$#$%^&^%$#$%')
+                        print('!@#$%^&*())(*&^%$#@@#$%^&*((*&^%$#$%^&^%$#$%')
+                        print('!@#$%^&*())(*&^%$#@@#$%^&*((*&^%$#$%^&^%$#$%\n')
+                        #return
                 elif self.sock.rig_type2=='IC9700':
                     #if ch<20:
                     if grp!='Sats' or ch>100:
@@ -386,6 +398,13 @@ class ft_cat2:
                 #self.Quit()
                 #sys.exit(0)
 
+        channels=set(channels)
+        print('CHANNELS=',channels)
+        all_channels=set(range(1,100))
+        print('ALL CHANNELS=',all_channels)
+        unused=sorted( list( all_channels-channels ) )
+        print('UNUSED CHANNELS=',unused)
+                
         print('Done.')
         
     ############################################################################################

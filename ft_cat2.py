@@ -243,6 +243,9 @@ class ft_cat2:
                text="Presets",     
                command=self.ProgramPresets).pack(side=LEFT,anchor=W)
         Button(SoundFrame,
+               text="DateTime",     
+               command=self.ProgramDateTime).pack(side=LEFT,anchor=W)
+        Button(SoundFrame,
                text="Mark"  , 
                command=Mark        ).pack(side=LEFT,anchor=W)
         Button(SoundFrame,
@@ -292,13 +295,14 @@ class ft_cat2:
 
     ############################################################################################
 
-    def ProgramPresets(self):
+    def ProgramDateTime(self):
 
         # Set time & date
-        if False:
-            self.sock.set_date_time()
-            self.Quit()
-            sys.exit(0)
+        self.sock.set_date_time()
+
+    ############################################################################################
+
+    def ProgramPresets(self):
 
         if self.sock.connection!='DIRECT':
             print('*** ERROR *** Need to use DIRECT CONNECTION to rig to program presets ***', \
@@ -380,7 +384,7 @@ class ft_cat2:
                 if self.sock.rig_type=='Yaesu':
                     #if ch<97 or ch>99:
                     #if ch!=84 and ch!=92 and ch!=93 and ch!=96:
-                    if ch>0:
+                    if ch>990:
                         #return
                         continue
                     same=write_mem_yaesu(self,grp,lab,chan,freq,mode,pl,uplink,inverting)
@@ -391,17 +395,17 @@ class ft_cat2:
                         print('!@#$%^&*())(*&^%$#@@#$%^&*((*&^%$#$%^&^%$#$%\n')
                         #return
                 elif self.sock.rig_type2=='IC9700':
-                    #if ch<20:
-                    if grp!='Sats' or ch>100:
+                    if ch>100:
+                        #if grp!='Sats' or ch>100:
                         continue
                     write_mem_icom(self,grp,lab,chan,freq,mode,pl,uplink,inverting)
                 #self.Quit()
                 #sys.exit(0)
 
         channels=set(channels)
-        print('CHANNELS=',channels)
+        print('PROGRAMMED CHANNELS=',channels)
         all_channels=set(range(1,100))
-        print('ALL CHANNELS=',all_channels)
+        #print('ALL CHANNELS=',all_channels)
         unused=sorted( list( all_channels-channels ) )
         print('UNUSED CHANNELS=',unused)
                 

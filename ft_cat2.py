@@ -357,7 +357,7 @@ class ft_cat2:
 
         channels=[]
         for line in presets:
-            #print line
+            #print(line)
             ch = line[self.sock.rig_type2]
             if len(ch)>0:
                 if ch=='N/A':
@@ -377,10 +377,13 @@ class ft_cat2:
                 uplink=line['Uplink']
                 inverting=line['Inverting']=='Yes'
 
-                #if grp!='Satellites' or ch!=80:
-                if grp=='Satellites':
+                #if grp!='Satellites' or ch!=6:
+                if grp!='Sats' or ch<28:
+                #if grp=='Satellites':
                     continue
+                
                 print( '\n############################################################################\nch=',ch)
+                print(line)
                 if self.sock.rig_type=='Yaesu':
                     #if ch<97 or ch>99:
                     #if ch!=84 and ch!=92 and ch!=93 and ch!=96:

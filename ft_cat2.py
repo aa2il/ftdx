@@ -5,6 +5,9 @@
 #
 # This module contains everything related to the gui for ftdx.py
 #
+# Can use this but not necessary:
+#    pip3 install tkinter-tooltip
+#
 ############################################################################################
 #
 # This program is free software: you can redistribute it and/or modify
@@ -29,10 +32,13 @@ from pprint import pprint
 
 if sys.version_info[0]==3:
     from tkinter import *
+    #import tkinter.ttk as ttk
+    #from tktooltip import ToolTip
 else:
     from Tkinter import *
 import time
 from collections import OrderedDict
+from ToolTip import *
 
 ############################################################################################    
 
@@ -236,15 +242,21 @@ class ft_cat2:
 #        p = pyaudio.PyAudio()    # pyaudio object 
 #        stream=0;                # streaming object
 
-        Button(SoundFrame,
-               text="Keypad",     
-               command=self.ProgramKeypadMsgs).pack(side=LEFT,anchor=W)
-        Button(SoundFrame,
-               text="Presets",     
-               command=self.ProgramPresets).pack(side=LEFT,anchor=W)
-        Button(SoundFrame,
-               text="DateTime",     
-               command=self.ProgramDateTime).pack(side=LEFT,anchor=W)
+        btn = Button(SoundFrame,text="Keypad",     
+                     command=self.ProgramKeypadMsgs)
+        btn.pack(side=LEFT,anchor=W)
+        ToolTip(btn,' Program Key Pad Messages ')
+        
+        btn=Button(SoundFrame,text="Presets",     
+               command=self.ProgramPresets)
+        btn.pack(side=LEFT,anchor=W)
+        ToolTip(btn,' Program Presets ')
+        
+        btn=Button(SoundFrame,text="DateTime",     
+               command=self.ProgramDateTime)
+        btn.pack(side=LEFT,anchor=W)
+        ToolTip(btn,' Program Date & Time ')
+        
         Button(SoundFrame,
                text="Mark"  , 
                command=Mark        ).pack(side=LEFT,anchor=W)
@@ -268,9 +280,11 @@ class ft_cat2:
         Button(LastFrame,
                text="Update",
                command=self.Update).pack(side=LEFT,anchor=W)
-        Button(LastFrame,
-               text="QUIT"  ,
-               command=self.Quit  ).pack(side=LEFT,anchor=W)
+        
+        btn=Button(LastFrame, text="QUIT"  ,
+               command=self.Quit  )
+        btn.pack(side=LEFT,anchor=W)
+        ToolTip(btn,' Exit ')
 
         #print ' ============== Here we go again ============'
         #get_status(self)
@@ -378,8 +392,8 @@ class ft_cat2:
                 inverting=line['Inverting']=='Yes'
 
                 #if grp!='Satellites' or ch!=6:
-                if grp!='Sats' or ch<28:
-                #if grp=='Satellites':
+                #if grp!='Sats' or ch<28:
+                if grp=='Satellites':
                     continue
                 
                 print( '\n############################################################################\nch=',ch)
@@ -387,7 +401,7 @@ class ft_cat2:
                 if self.sock.rig_type=='Yaesu':
                     #if ch<97 or ch>99:
                     #if ch!=84 and ch!=92 and ch!=93 and ch!=96:
-                    if ch>990:
+                    if ch>99:
                         #return
                         continue
                     same=write_mem_yaesu(self,grp,lab,chan,freq,mode,pl,uplink,inverting)

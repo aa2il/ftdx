@@ -91,7 +91,12 @@ class PARAMS:
                               type=int,default=0)
         args = arg_proc.parse_args()
 
-        self.connection    = args.rig[0]
+        if len(args.rig)==1:
+            if args.rig[0] in RIGS:
+                self.rig        = args.rig[0]
+                self.connection = 'DIRECT'
+            else:
+                self.connection = args.rig[0]
         if len(args.rig)>=2:
             self.rig       = args.rig[1]
         else:

@@ -22,6 +22,7 @@
 
 import sys
 from ft_cat2 import *
+#sys.exit(0)
 if sys.version_info[0]==3:
     from tkinter import *
 else:
@@ -31,8 +32,9 @@ from pprint import pprint
 import argparse
 import rig_io.socket_io as socket_io
 
-import pyaudio
-import wave
+#import pyaudio
+#import wave
+
 from settings import *
 
 ################################################################################
@@ -91,16 +93,15 @@ class PARAMS:
                               type=int,default=0)
         args = arg_proc.parse_args()
 
+        self.rig       = None
         if len(args.rig)==1:
             if args.rig[0] in RIGS:
                 self.rig        = args.rig[0]
                 self.connection = 'DIRECT'
             else:
                 self.connection = args.rig[0]
-        if len(args.rig)>=2:
+        elif len(args.rig)>=2:
             self.rig       = args.rig[1]
-        else:
-            self.rig       = None
         self.PORT          = args.port
         self.host          = 0
         self.baud          = 0
@@ -128,6 +129,7 @@ class PARAMS:
         #sys,exit(0)
         
         if True:
+            print('RIGS=',RIGS)
             print('args.rig=',args.rig)
             print('connection=',self.connection)
             print('rig=',self.rig)

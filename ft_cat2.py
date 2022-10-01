@@ -74,7 +74,7 @@ class ft_cat2:
             print('\nFT_CAT2: YIPPE! Opened connection to rig via',
                   P.sock.connection,P.sock.rig_type,P.sock.rig_type1,
                   P.sock.rig_type2,'\n')
-            if P.sock.connection=='FLDIGI':
+            if P.sock.connection=='FLDIGI' and False:
                 sys.exit(0)
 
         # Create the gui
@@ -247,10 +247,15 @@ class ft_cat2:
         btn.pack(side=LEFT,anchor=W)
         ToolTip(btn,' Program Key Pad Messages ')
         
-        btn=Button(SoundFrame,text="Presets",     
+        btn=Button(SoundFrame,text="Set Presets",     
                command=self.ProgramPresets)
         btn.pack(side=LEFT,anchor=W)
         ToolTip(btn,' Program Presets ')
+        
+        btn=Button(SoundFrame,text="Read Presets",     
+               command=self.ReadPresets)
+        btn.pack(side=LEFT,anchor=W)
+        ToolTip(btn,' Read Presets ')
         
         btn=Button(SoundFrame,text="DateTime",     
                command=self.ProgramDateTime)
@@ -314,6 +319,36 @@ class ft_cat2:
         # Set time & date
         self.sock.set_date_time()
 
+    ############################################################################################
+
+    def ReadPresets(self):
+
+        if self.sock.connection!='DIRECT':
+            print('*** ERROR *** Need to use DIRECT CONNECTION to rig to read presets ***', \
+                  self.sock.connection)
+            self.Quit()
+            sys.exit(0)
+
+        fp=open('PRESETS.CSV','w')
+        line='Tag,Freq (KHz),Mode,Shift,CTCSS,PL,Chan\n'
+        fp.write(line)
+
+        nchan=100
+        #for chan in range(nchan):
+        for chan in [22,30,0]:
+            print('\n-----------------------------------------\n',
+                  self.sock.rig_type,self.sock.rig_type2,'Chan',chan)
+            if self.sock.rig_type=='Yaesu':
+                mem=read_mem_yaesu(self,chan)
+                if mem:
+                    print(mem.tag,mem.freq,mem.mode,mem.chan)
+                    line=mem.tag+','+str(mem.freq)+','+mem.mode+','+ \
+                        mem.shift+','+mem.ctcss+','+str(mem.tone)+','+ \
+                        str(mem.chan)+'\n'
+                    fp.write(line)
+
+        fp.close()
+        
     ############################################################################################
 
     def ProgramPresets(self):
@@ -397,11 +432,12 @@ class ft_cat2:
                     continue
                 
                 print( '\n############################################################################\nch=',ch)
-                print(line)
+                print('line=',line)
                 if self.sock.rig_type=='Yaesu':
                     #if ch<97 or ch>99:
                     #if ch!=84 and ch!=92 and ch!=93 and ch!=96:
-                    if ch>99:
+                    #if ch>99:
+                    if ch<22 or ch>22:
                         #return
                         continue
                     same=write_mem_yaesu(self,grp,lab,chan,freq,mode,pl,uplink,inverting)
@@ -412,8 +448,10 @@ class ft_cat2:
                         print('!@#$%^&*())(*&^%$#@@#$%^&*((*&^%$#$%^&^%$#$%\n')
                         #return
                 elif self.sock.rig_type2=='IC9700':
-                    if ch>100:
+                    print('grp=',grp,lab,chan,freq,mode,pl,uplink,inverting)
+                    #if ch>100:
                         #if grp!='Sats' or ch>100:
+                    if freq<1200e3:
                         continue
                     write_mem_icom(self,grp,lab,chan,freq,mode,pl,uplink,inverting)
                 #self.Quit()

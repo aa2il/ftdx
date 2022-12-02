@@ -22,11 +22,14 @@
 import sys
 import json
 if sys.version_info[0]==3:
-    from tkinter import *
+    #from tkinter import *
+    import tkinter as tk
     import tkinter.font
 else:
-    from Tkinter import *
+    #from Tkinter import *
+    import Tkinter as tk
     import tkFont
+    
 from dx.cluster_connections import get_logger
 from dx.spot_processing import Station
 

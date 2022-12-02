@@ -23,22 +23,59 @@
 ############################################################################################
 
 import sys
+import os
 from rig_io.socket_io import *
-from rig_io.ft_tables import *
-from ft_keypad import *
-from rig_io.presets import *
+#from rig_io.socket_io import open_rig_connection,get_status,read_tx_pwr,\
+#    read_mic_gain,read_monitor_level
+#from rig_io.ft_tables import *
+from rig_io.ft_tables import CONNECTIONS,RIGS,bands,modes,\
+    CONTEST_BANDS,NON_CONTEST_BANDS,stations
+#from ft_keypad import *
+#from rig_io.presets import *
 from sound_replay import Mark,ReplayNormal,Slower
 from pprint import pprint
 
 if sys.version_info[0]==3:
-    from tkinter import *
-    #import tkinter.ttk as ttk
-    #from tktooltip import ToolTip
+    import tkinter as tk
 else:
-    from Tkinter import *
+    import Tkinter as tk
+
+import customtkinter as ctk
+
 import time
 from collections import OrderedDict
 from ToolTip import *
+
+############################################################################################    
+
+USE_CTK=True
+USE_CTK=False
+
+############################################################################################    
+
+# Apply generic names to gui widgets from selected tool set
+if USE_CTK:
+    ctk.set_appearance_mode("dark")      # Modes: "System" (standard), "Dark", "Light"
+    ctk.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
+    Tk=ctk.CTk
+    Frame = ctk.CTkFrame
+    Label = ctk.CTkLabel
+    ProgressBar = ctk.CTkProgressBar
+    Button = ctk.CTkButton
+    Scale = ctk.CTkSlider
+    Entry = ctk.CTkEntry
+    CheckBox = ctk.CTkCheckBox
+    Radiobutton = ctk.CTkRadioButton
+else:
+    Tk=tk.Tk
+    Frame = tk.Frame
+    Label = tk.Label
+    ProgressBar = ttk.Progressbar
+    Button = tk.Button
+    Scale = tk.Scale
+    Entry = tk.Entry
+    CheckBox = tk.Checkbutton
+    Radiobutton = ttk.Radiobutton
 
 ############################################################################################    
 
@@ -49,7 +86,6 @@ class ft_cat2:
         P.root       = Tk()
         self.P       = P
         self.parent  = P.root
-        #self.parent.title("FTDX-3000 Control by AA2IL")
 
         # Variables that are used in Tk object callbacks
         self.mode    = StringVar(self.parent)
@@ -86,6 +122,7 @@ class ft_cat2:
         self.parent.title("Radio Control by AA2IL"+rig)
         print('$$$$$$$$$$$$$$$$$$$$ GUI is up $$$$$$$$$$$$$$$$$')
 
+        
     def create_gui(self):
         parent=self.parent
 
@@ -112,10 +149,10 @@ class ft_cat2:
             
             Radiobutton(BandFrame, 
                         text=b,
-                        indicatoron = 0,
                         variable=self.band, 
                         command=lambda: SelectBand(self),
                         value=b).pack(side=LEFT,anchor=W)
+            # indicatoron = 0,
 
         # Create a frame with buttons to select operating mode
         ModeFrame = Frame(parent)
@@ -123,10 +160,10 @@ class ft_cat2:
         for m in modes:
             Radiobutton(ModeFrame, 
                         text=m,
-                        indicatoron = 0,
                         variable=self.mode, 
                         command=lambda: SelectMode(self),
                         value=m).pack(side=LEFT,anchor=W)
+            #indicatoron = 0,
 
         # Create a frame with buttons to select antenna
         AntFrame = Frame(parent)
@@ -134,43 +171,46 @@ class ft_cat2:
         for a in [1,2,3]:
             Radiobutton(AntFrame, 
                         text='Ant'+str(a),
-                        indicatoron = 0,
                         variable=self.ant, 
                         command=lambda: SelectAnt(self),
                         value=a).pack(side=LEFT,anchor=W)
+            #indicatoron = 0,
 
         # Create a frame with sliders to adjust tx power, mic and monitor gains
         SliderFrame = Frame(parent)
         SliderFrame.pack(side=TOP)
 
+        Label(SliderFrame, text="TX Power" ).pack()
         self.slider0 = Scale(SliderFrame, 
                              from_=0, to=100, 
                              orient=HORIZONTAL,
-                             length=300,
-                             label="TX Power",
                              command=self.Slider0CB )
+        #label="TX Power",
+        #length=300,
         self.slider0.pack()
         read_tx_pwr(self)
         print(("POWER: %d" % self.tx_pwr))
         self.slider0.set(self.tx_pwr)
 
+        Label(SliderFrame, text="Mic Gain" ).pack()
         self.slider1 = Scale(SliderFrame, 
                              from_=0, to=100, 
                              orient=HORIZONTAL,
-                             length=300,
-                             label="Mic Gain",
                              command=self.Slider1CB )
+        #label="Mic Gain",
+        #length=300,
         self.slider1.pack()
         read_mic_gain(self)
         print(("GAIN: %d" % self.gain))
         self.slider1.set(self.gain)
 
+        Label(SliderFrame, text="Monitor Level" ).pack()
         self.slider2 = Scale(SliderFrame, 
                              from_=0, to=100, 
                              orient=HORIZONTAL,
-                             length=300,
-                             label="Monitor Level",
                              command=self.Slider2CB )
+        #label="Monitor Level",
+        #length=300,
         self.slider2.pack()
         read_monitor_level(self)
         print(("LEVEL: %d" % self.mon_level))
@@ -193,10 +233,10 @@ class ft_cat2:
         for s in stations:
             Radiobutton(StationFrame, 
                         text=s,
-                        indicatoron = 0,
                         variable=self.station, 
                         command=lambda: SelectStation(self),
                         value=stations[s]).pack(side=LEFT,anchor=W)
+            #indicatoron = 0,
 
         # Create a frame with buttons to support other misc functions
         MiscFrame = Frame(parent)

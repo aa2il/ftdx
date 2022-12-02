@@ -22,11 +22,6 @@
 
 import sys
 from ft_cat2 import *
-#sys.exit(0)
-if sys.version_info[0]==3:
-    from tkinter import *
-else:
-    from Tkinter import *
 import time
 from pprint import pprint
 import argparse

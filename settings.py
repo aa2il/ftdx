@@ -1,7 +1,7 @@
 #########################################################################################
 #
 # settings.py - Rev. 1.0
-# Copyright (C) 2021 by Joseph B. Attili, aa2il AT arrl DOT net
+# Copyright (C) 2021-3 by Joseph B. Attili, aa2il AT arrl DOT net
 #
 # Gui for basic settings.
 #
@@ -42,12 +42,14 @@ class SETTINGS():
         if root:
             self.win=Toplevel(root)
         else:
-            self.win = Tk()
+            self.win = tk.Tk()
         self.win.title("Settings")
 
+        E=tk.E
+        W=tk.W
         row=0
-        Label(self.win, text='My Call:').grid(row=row, column=0)
-        self.call = Entry(self.win)
+        tk.Label(self.win, text='My Call:').grid(row=row, column=0)
+        self.call = tk.Entry(self.win)
         self.call.grid(row=row,column=1,sticky=E+W)
         #self.call.delete(0, END)
         try:
@@ -56,8 +58,8 @@ class SETTINGS():
             pass
 
         row+=1
-        Label(self.win, text='My Name:').grid(row=row, column=0)
-        self.name = Entry(self.win)
+        tk.Label(self.win, text='My Name:').grid(row=row, column=0)
+        self.name = tk.Entry(self.win)
         self.name.grid(row=row,column=1,sticky=E+W)
         try:
             self.name.insert(0,P.MY_NAME)
@@ -65,8 +67,8 @@ class SETTINGS():
             pass
         
         row+=1
-        Label(self.win, text='My State:').grid(row=row, column=0)
-        self.state = Entry(self.win)
+        tk.Label(self.win, text='My State:').grid(row=row, column=0)
+        self.state = tk.Entry(self.win)
         self.state.grid(row=row,column=1,sticky=E+W)
         try:
             self.state.insert(0,P.MY_STATE)
@@ -74,8 +76,8 @@ class SETTINGS():
             pass
         
         row+=1
-        Label(self.win, text='My Section:').grid(row=row, column=0)
-        self.sec = Entry(self.win)
+        tk.Label(self.win, text='My Section:').grid(row=row, column=0)
+        self.sec = tk.Entry(self.win)
         self.sec.grid(row=row,column=1,sticky=E+W)
         try:
             self.sec.insert(0,P.MY_SEC)
@@ -83,8 +85,8 @@ class SETTINGS():
             pass
 
         row+=1
-        Label(self.win, text='My CQ Zone:').grid(row=row, column=0)
-        self.cqz = Entry(self.win)
+        tk.Label(self.win, text='My CQ Zone:').grid(row=row, column=0)
+        self.cqz = tk.Entry(self.win)
         self.cqz.grid(row=row,column=1,sticky=E+W)
         try:
             self.cqz.insert(0,P.MY_CQ_ZONE)
@@ -92,8 +94,8 @@ class SETTINGS():
             pass
         
         row+=1
-        Label(self.win, text='My ITU Zone:').grid(row=row, column=0)
-        self.ituz = Entry(self.win)
+        tk.Label(self.win, text='My ITU Zone:').grid(row=row, column=0)
+        self.ituz = tk.Entry(self.win)
         self.ituz.grid(row=row,column=1,sticky=E+W)
         try:
             self.ituz.insert(0,P.MY_ITU_ZONE)
@@ -101,7 +103,7 @@ class SETTINGS():
             pass
         
         row+=1
-        button = Button(self.win, text="OK",command=self.Dismiss)
+        button = tk.Button(self.win, text="OK",command=self.Dismiss)
         button.grid(row=row,column=1,sticky=E+W)
 
         self.win.update()

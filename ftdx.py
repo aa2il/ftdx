@@ -2,7 +2,7 @@
 ################################################################################
 #
 # FTDX - Rev 1.0
-# Copyright (C) 2021 by Joseph B. Attili, aa2il AT arrl DOT net
+# Copyright (C) 2021-3 by Joseph B. Attili, aa2il AT arrl DOT net
 #
 # Gui to control/configure various rigs.
 #
@@ -109,7 +109,7 @@ class PARAMS:
             with open(self.RCFILE) as json_data_file:
                 self.SETTINGS = json.load(json_data_file)
         except:
-            print(self.RCFILE,' not found - need call!\n')
+            print(self.RCFILE,' not found - need callsign!\n')
             s=SETTINGS(None,self)
             while not self.SETTINGS:
                 try:

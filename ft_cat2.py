@@ -1,7 +1,7 @@
 ############################################################################################
 #
 # ft_cat2.py - Rev 1.0
-# Copyright (C) 2021 by Joseph B. Attili, aa2il AT arrl DOT net
+# Copyright (C) 2021-3 by Joseph B. Attili, aa2il AT arrl DOT net
 #
 # This module contains everything related to the gui for ftdx.py
 #
@@ -31,16 +31,15 @@ from rig_io.socket_io import *
 from rig_io.ft_tables import CONNECTIONS,RIGS,bands,modes,\
     CONTEST_BANDS,NON_CONTEST_BANDS,stations
 #from ft_keypad import *
-#from rig_io.presets import *
+from rig_io.presets import *
 from sound_replay import Mark,ReplayNormal,Slower
 from pprint import pprint
 
 if sys.version_info[0]==3:
     import tkinter as tk
+    from tkinter import ttk
 else:
     import Tkinter as tk
-
-import customtkinter as ctk
 
 import time
 from collections import OrderedDict
@@ -50,6 +49,8 @@ from ToolTip import *
 
 USE_CTK=True
 USE_CTK=False
+if USE_CTK:
+    import customtkinter as ctk
 
 ############################################################################################    
 
@@ -287,7 +288,7 @@ class ft_cat2:
         btn.pack(side=LEFT,anchor=W)
         ToolTip(btn,' Program Key Pad Messages ')
         
-        btn=Button(SoundFrame,text="Set Presets",     
+        btn=Button(SoundFrame,text="Prog Presets",     
                command=self.ProgramPresets)
         btn.pack(side=LEFT,anchor=W)
         ToolTip(btn,' Program Presets ')

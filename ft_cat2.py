@@ -139,6 +139,7 @@ class ft_cat2:
             # Only show bands that the connected rig supports
             if ((b=='10m')   and (self.sock.rig_type2=='TS850'   )) or \
                ((b=='2m' )   and (self.sock.rig_type2=='FTdx3000')) or \
+               ((b=='2m' )   and (self.sock.rig_type2=='IC7300'))   or \
                ((b=='1.25m') and (self.sock.rig_type2=='IC706'   )) or \
                ((b=='33cm')  and (self.sock.rig_type2=='FT991a'  )):
                 break
@@ -488,7 +489,7 @@ class ft_cat2:
                         print('!@#$%^&*())(*&^%$#@@#$%^&*((*&^%$#$%^&^%$#$%')
                         print('!@#$%^&*())(*&^%$#@@#$%^&*((*&^%$#$%^&^%$#$%\n')
                         #return
-                elif self.sock.rig_type2=='IC9700':
+                elif self.sock.rig_type2 in ['IC9700','IC7300']:
                     print('grp=',grp,lab,chan,freq,mode,pl,uplink,inverting)
                     #if ch>100:
                         #if grp!='Sats' or ch>100:

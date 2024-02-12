@@ -1,7 +1,7 @@
 ############################################################################################
 #
 # ft_cat2.py - Rev 1.0
-# Copyright (C) 2021-3 by Joseph B. Attili, aa2il AT arrl DOT net
+# Copyright (C) 2021-4 by Joseph B. Attili, aa2il AT arrl DOT net
 #
 # This module contains everything related to the gui for ftdx.py
 #
@@ -24,13 +24,9 @@
 
 import sys
 import os
-from rig_io.socket_io import *
-#from rig_io.socket_io import open_rig_connection,get_status,read_tx_pwr,\
-#    read_mic_gain,read_monitor_level
-#from rig_io.ft_tables import *
-from rig_io.ft_tables import CONNECTIONS,RIGS,bands,modes,\
+from rig_io import socket_io
+from rig_io import CONNECTIONS,RIGS,bands,modes,\
     CONTEST_BANDS,NON_CONTEST_BANDS,stations
-#from ft_keypad import *
 from rig_io.presets import *
 from sound_replay import Mark,ReplayNormal,Slower
 from pprint import pprint
@@ -102,7 +98,7 @@ class ft_cat2:
         self.TxT='Howdy'
 
         # Open connection to rig - can be via direct serial connection, fldigi, flrig or hamlib
-        self.sock = open_rig_connection(P.connection,P.host,P.PORT,P.baud,'FTDX: ',rig=P.rig)
+        self.sock = open_rig_qconnection(P.connection,P.host,P.PORT,P.baud,'FTDX: ',rig=P.rig)
         P.sock = self.sock
         if not self.sock.active:
             print('\n*** FT_CAT2: Unable to open a connection to the rig - giving up!')

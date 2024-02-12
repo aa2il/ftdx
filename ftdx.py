@@ -2,7 +2,7 @@
 ################################################################################
 #
 # FTDX - Rev 1.0
-# Copyright (C) 2021-3 by Joseph B. Attili, aa2il AT arrl DOT net
+# Copyright (C) 2021-4 by Joseph B. Attili, aa2il AT arrl DOT net
 #
 # Gui to control/configure various rigs.
 #
@@ -25,7 +25,7 @@ from ft_cat2 import *
 import time
 from pprint import pprint
 import argparse
-import rig_io.socket_io as socket_io
+from rig_io import socket_io 
 
 #import pyaudio
 #import wave

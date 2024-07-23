@@ -98,7 +98,7 @@ class ft_cat2:
         self.TxT='Howdy'
 
         # Open connection to rig - can be via direct serial connection, fldigi, flrig or hamlib
-        self.sock = open_rig_qconnection(P.connection,P.host,P.PORT,P.baud,'FTDX: ',rig=P.rig)
+        self.sock = socket_io.open_rig_connection(P.connection,P.host,P.PORT,P.baud,'FTDX: ',rig=P.rig)
         P.sock = self.sock
         if not self.sock.active:
             print('\n*** FT_CAT2: Unable to open a connection to the rig - giving up!')

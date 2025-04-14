@@ -1,11 +1,14 @@
-################################################################################
+############################################################################################
 #
 # ft_keypad.py - Rev 1.0
-# Copyright (C) 2021-4 by Joseph B. Attili, aa2il AT arrl DOT net
+# Copyright (C) 2021-5 by Joseph B. Attili, joe DOT aa2il AT gmail DOT com
 #
-# Functions related to programming the Yaesu keypad.
+# Functions related to programming the Yaesu keypad
 #
-################################################################################
+# To do - there are other version of this same thing floating around in
+# this mess, combine them.
+#
+############################################################################################
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +20,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-################################################################################
+############################################################################################
 
 import sys
 if sys.version_info[0]==3:
@@ -25,7 +28,7 @@ if sys.version_info[0]==3:
 else:
     from Tkinter import END
 
-################################################################################
+############################################################################################
 
 def GetKeyerMemory(self):
     s=self.sock
@@ -34,25 +37,19 @@ def GetKeyerMemory(self):
     for i in range(6):
         print("GetKeyerMemory: i=",i)
         if i<5:
-            if self.sock.connection=='HAMLIB' and False:
-                cmd='w KM'+str(i+1)+'\n'
-            else:
-                cmd='KM'+str(i+1)+';'
+            cmd='KM'+str(i+1)+';'
         else:
-            if self.sock.connection=='HAMLIB' and False:
-                cmd='w EX025\n'
-            else:
-                cmd='EX025;'
-                
+            cmd='EX025;'
+
         #        buf=get_response(s,cmd)
         buf=self.sock.get_response(cmd)
         print("buf=",buf)
-        if i<5:
-            j=buf.index('}')
-            self.Keyer[i]=buf[3:j]
-        else:
-            j=buf.index(';')
-            self.Keyer[i]=buf[5:j]
+            if i<5:
+                j=buf.index('}')
+                self.Keyer[i]=buf[3:j]
+            else:
+                j=buf.index(';')
+                self.Keyer[i]=buf[5:j]
 
 #        cmd='w EX0245\n'                          # Set cut numbers to 12NO - not sure why this is here?
 #        s.send(cmd)
@@ -62,14 +59,14 @@ def GetKeyerMemory(self):
 
 def KeyerMemoryDefaults(self,arg):
     print("\Setting Keypad Defaults ",arg)
-
+    
     MY_CALL     = self.P.MY_CALL
     MY_NAME     = self.P.MY_NAME
     MY_STATE    = self.P.MY_STATE
     MY_SEC      = self.P.MY_SEC
     MY_CQ_ZONE  = self.P.MY_CQ_ZONE
     MY_ITU_ZONE = self.P.MY_ITU_ZONE
-
+    
     if arg==1:
         # ARRL Intl DX Contest & CQ 160
         Keyer=[MY_CALL,'TU 5NN '+MY_STATE,MY_STATE+MY_STATE,'73','AGN?','0001']
@@ -107,12 +104,14 @@ def UpdateKeyerMemory(self):
         self.Keyer[i] = self.ekeyer[i].get()
         if i<5:
             if self.sock.connection=='HAMLIB':
-                cmd='w BY;KM'+str(i+1)+self.Keyer[i]+'}\n'
+                #cmd='w BY;KM'+str(i+1)+self.Keyer[i]+'}\n'                  # Old style b4 4.6.2
+                cmd='W KM'+str(i+1)+self.Keyer[i]+'}; 0'
             else:
                 cmd='KM'+str(i+1)+self.Keyer[i]+'};'
         else:
             if self.sock.connection=='HAMLIB':
-                cmd='w BY;EX025'+self.Keyer[i]+'\n'
+                #cmd='w BY;EX025'+self.Keyer[i]+'\n'                        # Old style b4 4.6.2
+                cmd='W EX025'+self.Keyer[i]+'; 0'                        # Old style b4 4.6.2
             else:
                 cmd='EX025'+self.Keyer[i]+';'
         print("cmd=",cmd)

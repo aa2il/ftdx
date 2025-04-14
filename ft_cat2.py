@@ -440,7 +440,7 @@ class ft_cat2:
 
         # Read table of presets - same as for pySDR but we look at a few different fields
         print("\n==================================== Programming Presets ...")
-        presets = read_presets2(self.sock.rig_type2,'Presets')
+        presets = read_presets2(self.sock.rig_type2,None,'Presets')
 
         channels=[]
         for line in presets:
